@@ -14,7 +14,9 @@ export default function AdminClient(){
     const r = await fetch("/api/import",{ method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ json: text }) });
     const j = await r.json(); setBusy(false);
     if(!r.ok){ add(`ERROR: ${j.error||"Import failed"}`); return; }
-    add(`OK: Imported ${j.count} questions. Dedup removed ${j.removed}.`);
+    add(`OK: Imported ${j.count} questions. Removed ${j.removed}.`);
+    if(typeof j.invalid === "number") add(`INFO: Invalid/missing fields: ${j.invalid}.`);
+    if(typeof j.duplicates === "number") add(`INFO: Duplicates updated: ${j.duplicates}.`);
     if(j.warnings?.length){ j.warnings.forEach((w:string)=>add(`WARN: ${w}`)); }
   }
   return (

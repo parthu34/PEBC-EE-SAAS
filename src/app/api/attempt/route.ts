@@ -22,14 +22,25 @@ const TOPIC_PHARM_SCI = "Pharmaceutical Sciences";
 const TOPIC_PRACTICE = "Pharmacy Practice";
 const TOPIC_BSA = "Behavioural, Social, and Administrative Sciences";
 
+function normalizeTopic(t: string){
+  const s = (t || "").trim().toLowerCase();
+  if(s.startsWith("pharmaceutical sciences")) return TOPIC_PHARM_SCI;
+  if(s.startsWith("pharmacy practice")) return TOPIC_PRACTICE;
+  if(s.includes("behavioural") || s.includes("behavioral") || s.includes("administrative")){
+    return TOPIC_BSA;
+  }
+  return t;
+}
+
 const FULL_COUNTS = { [TOPIC_PHARM_SCI]: 50, [TOPIC_PRACTICE]: 110, [TOPIC_BSA]: 40 };
 const MOCK_COUNTS = { [TOPIC_PHARM_SCI]: 8, [TOPIC_PRACTICE]: 16, [TOPIC_BSA]: 6 };
 
 function pickByTopic(uniqueQs: any[], counts: Record<string, number>){
   const byTopic = new Map<string, any[]>();
   for(const q of uniqueQs){
-    if(!byTopic.has(q.topic)) byTopic.set(q.topic, []);
-    byTopic.get(q.topic)!.push(q);
+    const topic = normalizeTopic(q.topic);
+    if(!byTopic.has(topic)) byTopic.set(topic, []);
+    byTopic.get(topic)!.push(q);
   }
   const out: any[] = [];
   for(const [topic, needed] of Object.entries(counts)){
@@ -43,8 +54,9 @@ function pickByTopic(uniqueQs: any[], counts: Record<string, number>){
 function chunkByTopic(uniqueQs: any[], counts: Record<string, number>, slots: number){
   const byTopic = new Map<string, any[]>();
   for(const q of uniqueQs){
-    if(!byTopic.has(q.topic)) byTopic.set(q.topic, []);
-    byTopic.get(q.topic)!.push(q);
+    const topic = normalizeTopic(q.topic);
+    if(!byTopic.has(topic)) byTopic.set(topic, []);
+    byTopic.get(topic)!.push(q);
   }
   const forms: any[][] = Array.from({ length: slots }, ()=>[]);
   for(const [topic, perForm] of Object.entries(counts)){

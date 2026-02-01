@@ -19,10 +19,20 @@ export async function POST(req: Request){
   const TOPIC_BSA = "Behavioural, Social, and Administrative Sciences";
   const FULL_COUNTS = { [TOPIC_PHARM_SCI]: 50, [TOPIC_PRACTICE]: 110, [TOPIC_BSA]: 40 };
   const MOCK_COUNTS = { [TOPIC_PHARM_SCI]: 8, [TOPIC_PRACTICE]: 16, [TOPIC_BSA]: 6 };
+  const normalizeTopic = (t: string) => {
+    const s = (t || "").trim().toLowerCase();
+    if(s.startsWith("pharmaceutical sciences")) return "Pharmaceutical Sciences";
+    if(s.startsWith("pharmacy practice")) return "Pharmacy Practice";
+    if(s.includes("behavioural") || s.includes("behavioral") || s.includes("administrative")){
+      return "Behavioural, Social, and Administrative Sciences";
+    }
+    return t;
+  };
   const byTopic = new Map<string, any[]>();
   for(const q of uniqueQs){
-    if(!byTopic.has(q.topic)) byTopic.set(q.topic, []);
-    byTopic.get(q.topic)!.push(q);
+    const topic = normalizeTopic(q.topic);
+    if(!byTopic.has(topic)) byTopic.set(topic, []);
+    byTopic.get(topic)!.push(q);
   }
   function pickByTopic(counts: Record<string, number>){
     const out:any[]=[];
