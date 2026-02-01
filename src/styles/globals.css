@@ -1,0 +1,25 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{ --bg:#0b1220; --card:#111a2a; --ink:#eaf1ff; --muted:#9fb2d6; --accent:#4f8cff; --accent2:#7dd3fc; --ok:#22c55e; --warn:#ffadad; }
+html,body{height:100%;background:var(--bg);color:var(--ink)}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.card{background:#0e1627;border:1px solid #1f2a44;border-radius:16px;padding:16px}
+.btn{@apply inline-flex items-center gap-2 rounded-lg border px-4 py-2; border-color:#253457; background:#14213a;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#061022;border:0;font-weight:600}
+.badge{@apply text-xs rounded-full px-2 py-1; border:1px solid #28406b; background:#0d1a31; color:#b9d3ff}
+.input{@apply w-full rounded-md border px-3 py-2 text-sm; border-color:#253457; background:#0f1a2d; color:var(--ink)}
+.label{@apply text-sm opacity-80 mb-1 block}
+.table{ @apply w-full text-sm; border-collapse: collapse; display:block; overflow-x:auto; }
+.table th,.table td{ border:1px solid #223456; padding:8px; vertical-align: top; }
+.table th{ background:#0a1730; color:#cddbf7 }
+.link{ color:var(--accent) }
+.btn:focus-visible,.link:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{
+  outline:2px solid var(--accent2);
+  outline-offset:2px;
+}
+@media (max-width: 640px){
+  .container{ padding:16px; }
+}
