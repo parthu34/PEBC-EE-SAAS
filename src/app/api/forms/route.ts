@@ -28,6 +28,8 @@ export async function POST(req: Request){
     }
     return t;
   };
+  const prettyCounts = (counts: Record<string, number>) =>
+    Object.entries(counts).map(([k,v])=>`${k}: ${v}`).join(", ");
   const byTopic = new Map<string, any[]>();
   for(const q of uniqueQs){
     const topic = normalizeTopic(q.topic);
@@ -48,20 +50,22 @@ export async function POST(req: Request){
   const full = await prisma.examForm.upsert({ where: { label: "Full-200 v1" }, update: {}, create: { label:"Full-200 v1", size:200 } });
   await prisma.examFormItem.deleteMany({ where: { formId: { in: [mock.id, full.id] } } });
   const m = pickByTopic(MOCK_COUNTS);
-  if(!m) return NextResponse.json({error:`Not enough questions to build Mock 30 with blueprint. Available: ${JSON.stringify(topicCounts)}`},{status:400});
+  if(!m) return NextResponse.json({error:`Not enough questions to build Mock 30 with blueprint. Required: ${prettyCounts(MOCK_COUNTS)}. Available: ${prettyCounts(topicCounts)}.`},{status:400});
   const mockConcepts = new Set(m.map(q=>q.conceptKey));
   const fullPool = uniqueQs.filter(q=>!mockConcepts.has(q.conceptKey));
   const byTopicFull = new Map<string, any[]>();
   for(const q of fullPool){
-    if(!byTopicFull.has(q.topic)) byTopicFull.set(q.topic, []);
-    byTopicFull.get(q.topic)!.push(q);
+    const topic = normalizeTopic(q.topic);
+    if(!byTopicFull.has(topic)) byTopicFull.set(topic, []);
+    byTopicFull.get(topic)!.push(q);
   }
   const f:any[]=[];
   for(const [topic, needed] of Object.entries(FULL_COUNTS)){
     const pool = byTopicFull.get(topic) || [];
     if(pool.length < needed){
       const avail = Object.fromEntries([...byTopicFull.entries()].map(([k,v])=>[k, v.length]));
-      return NextResponse.json({error:`Not enough ${topic} questions for Full 200. Available: ${JSON.stringify(avail)}`},{status:400});
+      const missing = Math.max(needed - (avail[topic] || 0), 0);
+      return NextResponse.json({error:`Not enough ${topic} questions for Full 200. Required: ${needed}, available: ${avail[topic] || 0}, missing: ${missing}. Required totals: ${prettyCounts(FULL_COUNTS)}. Available totals: ${prettyCounts(avail)}.`},{status:400});
     }
     f.push(...pool.slice(0, needed));
   }
