@@ -30,6 +30,26 @@ export async function GET(){
     const k = normalizeTopic(t.topic);
     topicCounts[k] = (topicCounts[k] || 0) + 1;
   }
+  const requiredMock = {
+    "Pharmaceutical Sciences": 8,
+    "Pharmacy Practice": 16,
+    "Behavioural, Social, and Administrative Sciences": 6
+  };
+  const requiredFull = {
+    "Pharmaceutical Sciences": 50,
+    "Pharmacy Practice": 110,
+    "Behavioural, Social, and Administrative Sciences": 40
+  };
+  const requiredAll = {
+    "Pharmaceutical Sciences": 8 + 50 * 3,
+    "Pharmacy Practice": 16 + 110 * 3,
+    "Behavioural, Social, and Administrative Sciences": 6 + 40 * 3
+  };
+  const missingAll: Record<string, number> = {};
+  for(const [k,v] of Object.entries(requiredAll)){
+    const have = topicCounts[k] || 0;
+    missingAll[k] = Math.max(v - have, 0);
+  }
   const mockSize = 30;
   const fullSize = 200;
   const maxFullAttempts = Math.max(0, Math.floor((uniqueConceptCount - mockSize) / fullSize));
@@ -40,6 +60,10 @@ export async function GET(){
     uniqueConceptCount,
     active,
     topicCounts,
+    requiredMock,
+    requiredFull,
+    requiredAll,
+    missingAll,
     maxFullAttempts
   });
 }

@@ -45,6 +45,14 @@ export default function AdminClient(){
                 ))}
               </div>
             )}
+            {stats.requiredAll && (
+              <div className="mt-2">
+                <div className="font-semibold">Needed for 3 full exams + 1 mock</div>
+                {Object.entries(stats.requiredAll).map(([k,v])=>(
+                  <div key={k}>{k}: <b>{v as any}</b> required, missing <b>{stats.missingAll?.[k] ?? 0}</b></div>
+                ))}
+              </div>
+            )}
           </div>
         )}
         <div className="card mb-3">
