@@ -35,7 +35,16 @@ export default function AdminClient(){
             <div>Unique (topic+conceptKey): <b>{stats.uniqueCount}</b></div>
             <div>Duplicates: <b>{stats.duplicateCount}</b></div>
             <div>Unique concepts: <b>{stats.uniqueConceptCount}</b></div>
+            {stats.active !== undefined && <div>Active questions: <b>{stats.active}</b></div>}
             <div>Max full exams without reuse (after mock): <b>{stats.maxFullAttempts}</b></div>
+            {stats.topicCounts && (
+              <div className="mt-2">
+                <div className="font-semibold">Active by topic</div>
+                {Object.entries(stats.topicCounts).map(([k,v])=>(
+                  <div key={k}>{k}: <b>{v as any}</b></div>
+                ))}
+              </div>
+            )}
           </div>
         )}
         <div className="card mb-3">
