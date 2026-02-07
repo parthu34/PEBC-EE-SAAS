@@ -18,7 +18,7 @@ export default function Landing(){
           </div>
           <div className="card">
             <h2 className="font-semibold mb-1">Full Exam (200Q)</h2>
-            <p className="text-sm opacity-90 mb-2">$9.99 single exam or $15.99 for 3 exams (credits).</p>
+            <p className="text-sm opacity-90 mb-2">$6.99 single exam or $10.99 for 3 exams (credits).</p>
             <div className="flex gap-2">
               <Link href="/login" className="btn btn-primary">Sign in to Buy</Link>
               <Link href="/dashboard" className="btn">Dashboard</Link>
