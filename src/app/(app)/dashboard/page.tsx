@@ -95,9 +95,9 @@ export default async function Dashboard({ searchParams }:{ searchParams?: { succ
           <CouponBanner />
           {(!effectiveHasOnePack && !effectiveHasThreePack) ? (
             <>
-              <BuyButton priceType="full" label="Buy 1 Full ($9.99)" primary />
+              <BuyButton priceType="full" label="Buy 1 Full ($6.99)" primary />
               <div className="mt-2">
-                <BuyButton priceType="bundle3" label="Buy 3 Exams ($15.99)" />
+                <BuyButton priceType="bundle3" label="Buy 3 Exams ($10.99)" />
               </div>
             </>
           ) : (
